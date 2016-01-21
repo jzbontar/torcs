@@ -9,6 +9,7 @@ src/tools/nfs2ac/nfs2ac
 src/tools/nfsperf/nfsperf
 src/tools/texmapper/texmapper
 src/tools/trackgen/trackgen
+src/tags
 *.a
 *-bin
 *.depend
