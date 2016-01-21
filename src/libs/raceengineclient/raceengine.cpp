@@ -679,7 +679,7 @@ reCapture(void)
 		labels = fopen("/mnt/seagate/torcs/labels.txt", "w");
 	}
 	tSituation *s = ReInfo->s;
-	fprintf(labels, "%d,%d,%f\n", capture->currentFrame + 1, s->cars[0]->recording, s->cars[0]->ctrl.steer);
+	fprintf(labels, "%d,%f\n", capture->currentFrame + 1, s->cars[0]->targets[0]);
 
 	/* capture image */
 	unsigned char *img;
@@ -701,6 +701,11 @@ reCapture(void)
 	snprintf(buf, BUFSIZE, "%s/torcs-%4.4d-%8.8d.png", capture->outputBase, capture->currentCapture, capture->currentFrame++);
 	GfImgWritePng(img, buf, vw, vh);
 	free(img);
+
+	/* debug */
+	if (capture->currentFrame % 10000 == 0) {
+		printf("captured frames: %d\n", capture->currentFrame);
+	}
 
 }
 

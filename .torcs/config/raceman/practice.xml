@@ -92,8 +92,8 @@
 
   <section name="Drivers Start List">
     <section name="1">
-      <attstr name="module" val="inferno"/>
-      <attnum name="idx" val="4"/>
+      <attstr name="module" val="jz"/>
+      <attnum name="idx" val="1"/>
     </section>
 
   </section>

@@ -102,26 +102,23 @@ drive(int index, tCarElt* car, tSituation *s)
 { 
 	float angle;
 
-	if (tick1 == 100) {
+	if (tick1 == 150) {
 		reMovieCapture(NULL);
 	}
 
-	if (tick1 % 200 < 30) {
-		car->recording = 0;
-		if ((tick1 / 200) % 2 == 0) {
-			angle = 0.1;
-		} else {
-			angle = -0.1;
-		}
-	} else {
-		car->recording = 1;
-		angle = RtTrackSideTgAngleL(&(car->_trkPos)) - car->_yaw;
-		NORM_PI_PI(angle);
-		angle -= car->_trkPos.toMiddle / car->_trkPos.seg->width;
-	}
+	angle = RtTrackSideTgAngleL(&(car->_trkPos)) - car->_yaw;
+	NORM_PI_PI(angle);
+	angle -= (car->_trkPos.toMiddle / car->_trkPos.seg->width);
+
+	/* predict with nn */
+	car->targets[0] = angle / car->_steerLock;
+
+	/* actual driving command */
+	float d = sin((double)tick1 / 500) / 2.;
+	angle = (angle + d) / car->_steerLock;
 
 	memset((void *)&car->ctrl, 0, sizeof(tCarCtrl)); 
-	car->ctrl.steer = angle / car->_steerLock;
+	car->ctrl.steer = angle;
 	car->ctrl.gear = 1;
 	car->ctrl.accelCmd = 0.3;
 	car->ctrl.brakeCmd = 0.0;

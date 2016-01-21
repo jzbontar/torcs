@@ -453,7 +453,7 @@ typedef struct CarElt
     tCarPitCmd		pitcmd;	/**< private */
     struct RobotItf	*robot;	/**< private */
     struct CarElt	*next;
-	int recording;
+	float targets[10];
 } tCarElt;
 
 
