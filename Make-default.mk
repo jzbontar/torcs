@@ -767,7 +767,7 @@ ifdef CONFIG
 
 installconf:
 	@for C in ${CONFIG} ; \
-	do echo "if [ ! -e  \$$1/${SHIPDIR}/$$C ] || [ ${SHIPDIR}/$$C -nt \$$1/${SHIPDIR}/$$C ]" >> ${SETUP_LINUX} ; \
+	do echo "if [ ! -e  \$$1/${SHIPDIR}/$$C ]" >> ${SETUP_LINUX} ; \
 	echo "then" >> ${SETUP_LINUX} ; \
 	echo "    if [ -e \$$1/${SHIPDIR}/$$C ]" >> ${SETUP_LINUX} ; \
 	echo "    then" >> ${SETUP_LINUX} ; \
