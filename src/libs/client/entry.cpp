@@ -51,7 +51,8 @@ TorcsEntry(void)
 
 	TorcsMainMenuInit();
 
-	SplashScreen();
+	// SplashScreen();
+	TorcsMainMenuRun();
 	
 	startMenuMusic();
 }
