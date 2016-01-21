@@ -31,6 +31,8 @@
 #include <robottools.h>
 #include <robot.h>
 
+#include <tgfclient.h>
+
 static tTrack	*curTrack;
 
 static void initTrack(int index, tTrack* track, void *carHandle, void **carParmHandle, tSituation *s); 
@@ -89,20 +91,49 @@ newrace(int index, tCarElt* car, tSituation *s)
 { 
 } 
 
+void reMovieCapture(void *);
+
 /* Drive during race. */
 static void  
 drive(int index, tCarElt* car, tSituation *s) 
 { 
-    memset((void *)&car->ctrl, 0, sizeof(tCarCtrl)); 
-    car->ctrl.brakeCmd = 1.0; /* all brakes on ... */ 
-    /*  
-     * add the driving code here to modify the 
-     * car->_steerCmd 
-     * car->_accelCmd 
-     * car->_brakeCmd 
-     * car->_gearCmd 
-     * car->_clutchCmd 
-     */ 
+	static unsigned long tick1, tick2;
+	float angle;
+
+	tick1++;
+	if (tick1 == 1) {
+		reMovieCapture(NULL);
+	}
+
+	if (tick1 % 200 < 30) {
+		if ((tick1 / 200) % 2 == 0) {
+			angle = 0.1;
+		} else {
+			angle = -0.1;
+		}
+	} else {
+		angle = RtTrackSideTgAngleL(&(car->_trkPos)) - car->_yaw;
+		NORM_PI_PI(angle);
+		angle -= car->_trkPos.toMiddle / car->_trkPos.seg->width;
+
+//		if (tick1 > 200) {
+//			const int cam_width = 320;
+//			const int cam_height = 240;
+//			unsigned char cam_data[3 * cam_width * cam_height];
+//			glReadPixels(0, 0, cam_width, cam_height, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)cam_data);
+//
+//			char buf[1024];
+//			snprintf(buf, 1024, "/mnt/seagate/torcs/data/frame_%08d.png", tick2);
+//			GfImgWritePng(cam_data, buf, cam_width, cam_height);
+//			tick2++;
+//		}
+	}
+
+	memset((void *)&car->ctrl, 0, sizeof(tCarCtrl)); 
+	car->ctrl.steer = angle / car->_steerLock;
+	car->ctrl.gear = 1;
+	car->ctrl.accelCmd = 0.3;
+	car->ctrl.brakeCmd = 0.0;
 }
 
 /* End of the current race */

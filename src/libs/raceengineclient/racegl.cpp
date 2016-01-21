@@ -86,7 +86,7 @@ reSkipPreStart(void * /* dummy */)
     }
 }
 
-static void
+void
 reMovieCapture(void * /* dummy */)
 {
    tRmMovieCapture	*capture = &(ReInfo->movieCapture);
@@ -99,12 +99,14 @@ reMovieCapture(void * /* dummy */)
     capture->state = 1 - capture->state;
     if (capture->state) {
 	GfOut("Video Capture Mode On\n");
+	printf("Start recording\n");
 	capture->currentFrame = 0;
 	capture->currentCapture++;
 	capture->lastFrame = GfTimeClock() - capture->deltaFrame;
 	ReInfo->_displayMode = RM_DISP_MODE_CAPTURE;
     } else {
 	GfOut("Video Capture Mode Off\n");
+	printf("Stop recording\n");
 	ReInfo->_displayMode = RM_DISP_MODE_NORMAL;
 	ReStart();
     }
@@ -205,6 +207,7 @@ ReScreenInit(void)
 				   32);
 
     GfuiVisibilitySet(reScreenHandle, rePauseId, 0);
+
 
     return reScreenHandle;
 }

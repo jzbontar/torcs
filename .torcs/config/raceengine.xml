@@ -23,9 +23,9 @@
   </section>
 
   <section name="Movie Capture">
-    <attstr name="enable capture" in="yes,no" val="no"/>
+    <attstr name="enable capture" in="yes,no" val="yes"/>
     <attnum name="fps" val="25"/>
-    <attstr name="output directory" val="/home/torcs/captures"/>
+    <attstr name="output directory" val="/mnt/seagate/torcs/capture"/>
   </section>
 
 </params>

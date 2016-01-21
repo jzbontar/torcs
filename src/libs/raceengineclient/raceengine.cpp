@@ -614,16 +614,6 @@ ReOneStep(double deltaTimeIncrement)
 	tRobotItf *robot;
 	tSituation *s = ReInfo->s;
 
-	if ((ReInfo->_displayMode != RM_DISP_MODE_NONE) && (ReInfo->_displayMode != RM_DISP_MODE_CONSOLE)) {
-		if (floor(s->currentTime) == -2.0) {
-			ReRaceBigMsgSet("Ready", 1.0);
-		} else if (floor(s->currentTime) == -1.0) {
-			ReRaceBigMsgSet("Set", 1.0);
-		} else if (floor(s->currentTime) == 0.0) {
-			ReRaceBigMsgSet("Go", 1.0);
-		}
-	}
-
 	ReInfo->_reCurTime += deltaTimeIncrement * ReInfo->_reTimeMult; /* "Real" time */
 	s->currentTime += deltaTimeIncrement; /* Simulated time */
 
