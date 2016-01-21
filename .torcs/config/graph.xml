@@ -69,7 +69,7 @@
       <attnum name="driver board" val="0"/>
       <attnum name="driver counter" val="0"/>
       <attnum name="leader board" val="0"/>
-      <attnum name="G graph" val="1"/>
+      <attnum name="G graph" val="0"/>
       <attnum name="debug info" val="0"/>
       <attnum name="map mode" val="1"/>
       <attstr name="current driver" val="inferno 4"/>

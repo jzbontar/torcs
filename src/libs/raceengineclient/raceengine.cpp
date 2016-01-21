@@ -669,9 +669,21 @@ ReStop(void)
 static void
 reCapture(void)
 {
+	tRmMovieCapture	*capture = &(ReInfo->movieCapture);
+
+	/* capture ctrl */
+	static int n;
+	static FILE *labels;
+	if (!n) {
+		n = 1;
+		labels = fopen("/mnt/seagate/torcs/labels.txt", "w");
+	}
+	tSituation *s = ReInfo->s;
+	fprintf(labels, "%d,%d,%f\n", capture->currentFrame + 1, s->cars[0]->recording, s->cars[0]->ctrl.steer);
+
+	/* capture image */
 	unsigned char *img;
 	int sw, sh, vw, vh;
-	tRmMovieCapture	*capture = &(ReInfo->movieCapture);
 	const int BUFSIZE = 1024;
 	char buf[BUFSIZE];
 	
@@ -689,8 +701,8 @@ reCapture(void)
 	snprintf(buf, BUFSIZE, "%s/torcs-%4.4d-%8.8d.png", capture->outputBase, capture->currentCapture, capture->currentFrame++);
 	GfImgWritePng(img, buf, vw, vh);
 	free(img);
-}
 
+}
 
 int
 ReUpdate(void)
@@ -741,6 +753,7 @@ ReUpdate(void)
 			while ((ReInfo->_reCurTime - capture->lastFrame) < capture->deltaFrame) {
 				ReOneStep(capture->deltaSimu);
 			}
+			ReOneStep(capture->deltaSimu);
 			capture->lastFrame = ReInfo->_reCurTime;
 
 			GfuiDisplay();

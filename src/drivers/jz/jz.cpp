@@ -91,42 +91,33 @@ newrace(int index, tCarElt* car, tSituation *s)
 { 
 } 
 
+extern tRmInfo *ReInfo;
 void reMovieCapture(void *);
+
+unsigned long long tick1;
 
 /* Drive during race. */
 static void  
 drive(int index, tCarElt* car, tSituation *s) 
 { 
-	static unsigned long tick1, tick2;
 	float angle;
 
-	tick1++;
-	if (tick1 == 1) {
+	if (tick1 == 100) {
 		reMovieCapture(NULL);
 	}
 
 	if (tick1 % 200 < 30) {
+		car->recording = 0;
 		if ((tick1 / 200) % 2 == 0) {
 			angle = 0.1;
 		} else {
 			angle = -0.1;
 		}
 	} else {
+		car->recording = 1;
 		angle = RtTrackSideTgAngleL(&(car->_trkPos)) - car->_yaw;
 		NORM_PI_PI(angle);
 		angle -= car->_trkPos.toMiddle / car->_trkPos.seg->width;
-
-//		if (tick1 > 200) {
-//			const int cam_width = 320;
-//			const int cam_height = 240;
-//			unsigned char cam_data[3 * cam_width * cam_height];
-//			glReadPixels(0, 0, cam_width, cam_height, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)cam_data);
-//
-//			char buf[1024];
-//			snprintf(buf, 1024, "/mnt/seagate/torcs/data/frame_%08d.png", tick2);
-//			GfImgWritePng(cam_data, buf, cam_width, cam_height);
-//			tick2++;
-//		}
 	}
 
 	memset((void *)&car->ctrl, 0, sizeof(tCarCtrl)); 
@@ -134,7 +125,10 @@ drive(int index, tCarElt* car, tSituation *s)
 	car->ctrl.gear = 1;
 	car->ctrl.accelCmd = 0.3;
 	car->ctrl.brakeCmd = 0.0;
+
+	tick1++;
 }
+
 
 /* End of the current race */
 static void
