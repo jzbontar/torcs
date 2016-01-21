@@ -27,6 +27,9 @@
 #include "linuxspec.h"
 #include <raceinit.h>
 
+#include <singleplayer.h>
+#include "src/libs/client/mainmenu.h"
+
 extern bool bKeepModules;
 
 static void
@@ -104,6 +107,22 @@ init_args(int argc, char **argv, const char **raceconfig)
 #endif
 }
 
+void ClickRace(int) {
+    GfuiScreenActivate(ReSinglePlayerInit(menuHandle));
+}
+
+void reSelectRaceman(void *);
+void ClickPractice(int)
+{
+    void *params = GfParmReadFile("/home/jure/.torcs/config/raceman/practice.xml", GFPARM_RMODE_STD);
+    reSelectRaceman(params);
+}
+
+void ClickStartRace(int)
+{
+    ReStartNewRace(NULL);
+}
+
 /*
  * Function
  *	main
@@ -131,6 +150,9 @@ main(int argc, char *argv[])
 	if(strlen(raceconfig) == 0) {
 		GfScrInit(argc, argv);	/* init screen */
 		TorcsEntry();			/* launch TORCS */
+        glutTimerFunc(0, ClickRace, 0);
+        glutTimerFunc(0, ClickPractice, 0);
+        glutTimerFunc(0, ClickStartRace, 0);
 		glutMainLoop();			/* event loop of glut */
 	} else {
 		// Run race from console, no Window, no OpenGL/OpenAL etc.

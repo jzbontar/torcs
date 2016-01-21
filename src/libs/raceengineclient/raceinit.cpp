@@ -136,7 +136,7 @@ ReStartNewRace(void * /* dummy */)
 
 
 /* Launch a race manager */
-static void reSelectRaceman(void *params)
+void reSelectRaceman(void *params)
 {
 	char *s, *e, *m;
 
