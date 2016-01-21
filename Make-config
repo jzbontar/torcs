@@ -6,7 +6,7 @@
 #    created              : Mon Dec 11 23:47:37 CET 2000
 #    copyright            : (C) 2000 by Eric Espi�                        
 #    email                : Eric.Espie@torcs.org   
-#    version              : $Id: Make-config,v 1.28.2.17 2014/04/14 05:10:09 berniw Exp $                                  
+#    version              : $Id: Make-config.in,v 1.17.2.1 2008/06/01 20:19:38 berniw Exp $                                  
 #
 ##############################################################################
 #
@@ -22,11 +22,11 @@ SHELL = /bin/sh
 srcdir = .
 top_srcdir = ${TORCS_BASE}
 
-prefix = /home/berni/torcs_bin
+prefix = /usr
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin
-libdir = ${exec_prefix}/lib64/torcs
+libdir = ${exec_prefix}/lib/torcs
 datarootdir = ${prefix}/share
 datadir = ${prefix}/share/games/torcs
 vardir = ${prefix}/var/games/torcs
@@ -49,18 +49,18 @@ INSTALL_SCRIPT = ${INSTALL}
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 
 CFLAGSD = -D_SVID_SOURCE -D_BSD_SOURCE -DSHM -DHAVE_CONFIG_H
-CXXFLAGS =  -march=barcelona -O2 -fno-strict-aliasing -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES -march=barcelona -O2 -fno-strict-aliasing ${CFLAGSD}
-CFLAGS   =  -march=barcelona -O2 -fno-strict-aliasing -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES ${CFLAGSD}
+CXXFLAGS =  -g -O2 -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES  ${CFLAGSD}
+CFLAGS   =  -g -O2 -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES ${CFLAGSD}
 
 #EXT_LIBS = -lpthread -lplibjs -lplibssgaux -lplibssg -lplibsm -lplibsl -lplibsg -lplibul -lglut -lGLU -lGL -lpng -lz -ldl -lXrandr -lXrender -lXxf86vm -lXmu -lXi -lXt -lSM -lICE -lXext -lX11 -lm 
 EXT_LIBS = -lplibjs -lplibssgaux -lplibssg -lplibsm -lplibsl -lplibsg -lplibul -lglut -lGLU -lGL -lpng -lz -ldl -lXrandr -lXrender -lXxf86vm -lXmu -lXi -lXt -lSM -lICE -lXext -lX11 -lm 
-#LDFLAGS =   -lopenal -lalut -lvorbisfile -L${EXPORTBASE}/lib -L/usr/lib -L/usr/local/lib
-LDFLAGS =  -L${EXPORTBASE}/lib  -lopenal -lalut -lvorbisfile -L/usr/lib
+#LDFLAGS =   -L/usr/lib -lopenal -lalut -lvorbisfile -L${EXPORTBASE}/lib -L/usr/lib -L/usr/local/lib
+LDFLAGS =  -L${EXPORTBASE}/lib  -L/usr/lib -lopenal -lalut -lvorbisfile -L/usr/lib
 
 #INCFLAGS =  -I${EXPORTBASE}/include -I/usr/include -I/usr/local/include
 INCFLAGS =  -I${EXPORTBASE}/include -I${TORCS_BASE}
 
-CPP = gcc -E -march=barcelona -O2 -fno-strict-aliasing -M -D__DEPEND__
+CPP = gcc -E  -M -D__DEPEND__
 
 PACKAGE = torcs
 VERSION = 1.3.6
