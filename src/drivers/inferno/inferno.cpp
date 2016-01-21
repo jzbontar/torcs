@@ -19,6 +19,7 @@
 
 
 #include "berniw.h"
+#include <tgfclient.h>
 
 
 // Function prototypes.
@@ -171,6 +172,18 @@ static void drive(int index, tCarElt* car, tSituation *situation)
 	tdble b4;							// Brake value for avoiding high angle of attack.
 	tdble b5;							// Brake for the pit;
 	tdble steer, targetAngle, shiftaccel;
+
+	static int screenshot = 0;
+	if (screenshot == 0) {
+		screenshot = 1;
+
+		const int cam_width = 640;
+		const int cam_height = 480;
+		unsigned char cam_data[3 * cam_width * cam_height];
+		glReadPixels(0, 0, cam_width, cam_height, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)cam_data);
+		GfImgWritePng(cam_data, "/tmp/foo.png", cam_width, cam_height);
+		printf("Screenshot written to /tmp/foo.png\n");
+	}
 
 	MyCar* myc = mycar[index-1];
 	Pathfinder* mpf = myc->getPathfinderPtr();
