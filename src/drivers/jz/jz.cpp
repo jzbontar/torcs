@@ -23,6 +23,7 @@
 #include <stdlib.h> 
 #include <string.h> 
 #include <math.h>
+#include <err.h>
 
 #include <tgf.h> 
 #include <track.h> 
@@ -33,6 +34,14 @@
 
 #include <tgfclient.h>
 
+extern "C" {
+	#include "lua.h"
+	#include "lualib.h"
+	#include "lauxlib.h"
+}
+#include "luaT.h"
+#include "TH.h"
+
 static tTrack	*curTrack;
 
 static void initTrack(int index, tTrack* track, void *carHandle, void **carParmHandle, tSituation *s); 
@@ -42,6 +51,7 @@ static void endrace(int index, tCarElt *car, tSituation *s);
 static void shutdown(int index);
 static int  InitFuncPt(int index, void *pt); 
 
+static lua_State *L = NULL;
 
 /* 
  * Module entry point  
@@ -49,6 +59,15 @@ static int  InitFuncPt(int index, void *pt);
 extern "C" int 
 jz(tModInfo *modInfo) 
 {
+	L = luaL_newstate();
+	luaL_openlibs(L);
+	if (luaL_loadfile(L, "/home/jure/build/torcs-1.3.6/src/drivers/jz/main.lua")) {
+		err(0, "luaL_loadfile");
+	}
+	if (lua_pcall(L, 0, 0, 0)) {
+		err(0, "lua_pcall");
+	}
+
     memset(modInfo, 0, 10*sizeof(tModInfo));
 
     modInfo->name    = strdup("jz");		/* name of the module (short) */
@@ -94,6 +113,9 @@ newrace(int index, tCarElt* car, tSituation *s)
 extern tRmInfo *ReInfo;
 void reMovieCapture(void *);
 
+#define WIDTH 160
+#define HEIGHT 120
+unsigned char img[3 * WIDTH * HEIGHT];
 unsigned long long tick1;
 
 /* Drive during race. */
@@ -102,18 +124,30 @@ drive(int index, tCarElt* car, tSituation *s)
 { 
 	float angle;
 
-	if (tick1 == 150) {
-		reMovieCapture(NULL);
-	}
+	glReadPixels(0, 0, WIDTH, WIDTH, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)img);
 
+	THByteStorage *storage = THByteStorage_newWithData(img, 3 * WIDTH * HEIGHT);
+	THByteTensor *tensor = THByteTensor_newWithStorage1d(storage, 0, 3 * WIDTH * HEIGHT, 1);
+	lua_getglobal(L, "drive");
+	luaT_pushudata(L, (void *)tensor, "torch.ByteTensor");
+	lua_pcall(L, 1, 1, 0);
+	angle = lua_tonumber(L, -1);
+
+	memset((void *)&car->ctrl, 0, sizeof(tCarCtrl)); 
+	car->ctrl.steer = angle;
+	car->ctrl.gear = 1;
+	car->ctrl.accelCmd = 0.3;
+	car->ctrl.brakeCmd = 0.0;
+
+/*
 	angle = RtTrackSideTgAngleL(&(car->_trkPos)) - car->_yaw;
 	NORM_PI_PI(angle);
 	angle -= (car->_trkPos.toMiddle / car->_trkPos.seg->width);
 
-	/* predict with nn */
+	// predict with nn
 	car->targets[0] = angle / car->_steerLock;
 
-	/* actual driving command */
+	// actual driving command
 	float d = sin((double)tick1 / 500) / 2.;
 	angle = (angle + d) / car->_steerLock;
 
@@ -122,6 +156,7 @@ drive(int index, tCarElt* car, tSituation *s)
 	car->ctrl.gear = 1;
 	car->ctrl.accelCmd = 0.3;
 	car->ctrl.brakeCmd = 0.0;
+*/
 
 	tick1++;
 }

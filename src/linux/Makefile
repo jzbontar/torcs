@@ -35,7 +35,8 @@ SOLIBS  =  -lracescreens  \
 	   -lplibul	  \
 	   -lraceengine   \
 	   -lmusicplayer  \
-	   -llearning
+	   -llearning \
+	   -L/home/jure/torch/install/lib -lluajit -lluaT -lTH
 
 EXPDIR  = include
 

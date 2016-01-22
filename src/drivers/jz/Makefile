@@ -26,4 +26,7 @@ PKGSUBDIRS  = ${SHIPSUBDIRS}
 src-robots-jz_PKGFILES = $(shell find * -maxdepth 0 -type f -print)
 src-robots-jz_PKGDIR   = ${PACKAGE}-${VERSION}/$(subst ${TORCS_BASE},,$(shell pwd))
 
+LIBS        = -L/home/jure/torch/install/lib -lluajit -lluaT -lTH
+COMPILFLAGS = -I/home/jure/torch/install/include/ -I/home/jure/torch/install/include/TH/
+
 include ${MAKE_DEFAULT}
